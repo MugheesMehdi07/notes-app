@@ -1,13 +1,14 @@
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import Note
+from .models import Note, Audio
 from .serializers import NoteSerializer, AudioFileSerializer, UserRegistrationSerializer, \
-    CustomTokenObtainPairSerializer
+    CustomTokenObtainPairSerializer, AudioSerializer
 
 
 class UserRegistrationView(APIView):
@@ -103,19 +104,20 @@ class NoteDetailView(APIView):
 
 
 
-class AudioFileUploadView(APIView):
+class AudioUploadView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, note_id):
         try:
-            note = Note.objects.get(pk=note_id, user=request.user)
+            note = Note.objects.get(id=note_id, user=request.user)
         except Note.DoesNotExist:
             return Response({'error': 'Note not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        data = request.data
-        data['note'] = note.id
-        serializer = AudioFileSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        file = request.FILES.get('file')
+        if not file:
+            return Response({'error': 'No audio file provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        audio = Audio.objects.create(note=note, file=file)
+        serializer = AudioSerializer(audio)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

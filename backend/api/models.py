@@ -12,10 +12,7 @@ class Note(models.Model):
     def __str__(self):
         return self.title
 
-class AudioFile(models.Model):
-    note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name='audio_files')
+class Audio(models.Model):
+    note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name='audio')
     file = models.FileField(upload_to='audio/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Audio for {self.note.title}"

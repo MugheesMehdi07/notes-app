@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Note, AudioFile
+from .models import Note, AudioFile, Audio
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -32,13 +32,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         return token
 
-class AudioFileSerializer(serializers.ModelSerializer):
+class AudioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AudioFile
-        fields = '__all__'
+        model = Audio
+        fields = ['id', 'file', 'uploaded_at']
 
 class NoteSerializer(serializers.ModelSerializer):
-    audio_files = AudioFileSerializer(many=True, read_only=True)  # Embed related audio files
+    audio_files = AudioSerializer(many=True, read_only=True)  # Embed related audio files
 
     class Meta:
         model = Note

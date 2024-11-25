@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views import NoteListView, NoteDetailView, AudioFileUploadView, UserRegistrationView, CustomTokenObtainPairView
+from .views import NoteListView, NoteDetailView, UserRegistrationView, CustomTokenObtainPairView, AudioUploadView
 
 urlpatterns = [
     #user registration
@@ -14,5 +14,5 @@ urlpatterns = [
     path('notes/<int:pk>/', NoteDetailView.as_view(), name='note_detail'),
 
     # Audio Files
-    path('notes/<int:note_id>/audio/', AudioFileUploadView.as_view(), name='audio_upload'),
+    path('notes/<int:note_id>/audio/', AudioUploadView.as_view(), name='audio-upload'),
 ]

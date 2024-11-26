@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, Typography} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 
 const SignupForm = ({ onSubmit, isLoading }) => {
   const [formData, setFormData] = useState({
@@ -8,6 +10,7 @@ const SignupForm = ({ onSubmit, isLoading }) => {
     password: '',
     confirmPassword: '',
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -64,6 +67,13 @@ const SignupForm = ({ onSubmit, isLoading }) => {
       >
         {isLoading ? 'Signing up...' : 'Sign Up'}
       </Button>
+
+       <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          Already have an account?{' '}
+          <Button variant="text" onClick={() => navigate('/login')}>
+            Login here
+          </Button>
+        </Typography>
     </Box>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { fetchNotes, createNote, updateNote, deleteNote } from '../redux/slices/notesSlice';
 import NotesList from '../components/NotesList';
 import NoteForm from '../components/NoteForm';
@@ -13,10 +14,18 @@ const NotesPage = () => {
   const [currentNote, setCurrentNote] = useState(null);
   const [showRecorder, setShowRecorder] = useState(false);
   const [currentNoteId, setCurrentNoteId] = useState(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(fetchNotes());
   }, [dispatch]);
+
+  const handleLogout = () => {
+    // Clear tokens and redirect to login
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    navigate('/login');
+  };
 
   const handleSaveAudio = async (blob, noteId) => {
     const formData = new FormData();
@@ -47,6 +56,9 @@ const NotesPage = () => {
       <Button variant="contained" color="primary" onClick={() => setOpenDialog(true)}>
         Create Note
       </Button>
+       <Button variant="outlined" color="error" onClick={handleLogout}>
+          Logout
+       </Button>
 
       <NotesList
         notes={notes}

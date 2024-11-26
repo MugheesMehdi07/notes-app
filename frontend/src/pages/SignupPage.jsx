@@ -2,9 +2,12 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signup } from '../redux/slices/authSlice';
 import SignupForm from '../components/SignupForm';
+import { useNavigate } from 'react-router-dom';
+
 
 const SignupPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
 
   const handleSignup = async (formData) => {
@@ -16,6 +19,7 @@ const SignupPage = () => {
     try {
       await dispatch(signup(formData)).unwrap();
       alert('Signup successful! Please log in.');
+      navigate("/login");
     } catch (error) {
       alert(error);
     }

@@ -51,7 +51,7 @@ class NoteListView(APIView):
         responses={201: NoteSerializer},
     )
     def post(self, request):
-        data = request.data
+        data = request.data.copy()
         data['user'] = request.user.id
         serializer = NoteSerializer(data=data)
         if serializer.is_valid():

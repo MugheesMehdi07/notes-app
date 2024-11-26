@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box , Typography} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 
 const LoginForm = ({ onSubmit, isLoading }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,6 +40,13 @@ const LoginForm = ({ onSubmit, isLoading }) => {
       >
         {isLoading ? 'Logging in...' : 'Login'}
       </Button>
+
+       <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          New to App, create an account?{' '}
+          <Button variant="text" onClick={() => navigate('/signup')}>
+            Signup here
+          </Button>
+        </Typography>
     </Box>
   );
 };

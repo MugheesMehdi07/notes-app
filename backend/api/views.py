@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Note, Audio
-from .serializers import NoteSerializer, AudioFileSerializer, UserRegistrationSerializer, \
+from .serializers import NoteSerializer, UserRegistrationSerializer, \
     CustomTokenObtainPairSerializer, AudioSerializer
 
 
@@ -120,4 +120,7 @@ class AudioUploadView(APIView):
 
         audio = Audio.objects.create(note=note, file=file)
         serializer = AudioSerializer(audio)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+

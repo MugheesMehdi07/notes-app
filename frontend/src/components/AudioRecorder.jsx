@@ -5,6 +5,14 @@ const AudioRecorder = ({ onSave }) => {
   const [audioURL, setAudioURL] = useState(null);
 
   const startRecording = async () => {
+
+ // Check if browser supports navigator.mediaDevices.getUserMedia
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    alert('Audio recording is not supported in your browser.');
+    return;
+  }
+
+
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
     const chunks = [];

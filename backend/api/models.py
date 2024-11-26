@@ -13,6 +13,6 @@ class Note(models.Model):
         return self.title
 
 class Audio(models.Model):
-    note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name='audio')
+    note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name='audio_files')
     file = models.FileField(upload_to='audio/')
     uploaded_at = models.DateTimeField(auto_now_add=True)

@@ -11,6 +11,7 @@ export const fetchNotes = createAsyncThunk(
       const response = await api.get('/notes/', {
         headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
       });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch notes');
@@ -63,6 +64,25 @@ export const deleteNote = createAsyncThunk(
   }
 );
 
+// Async Thunk: Upload Audio
+export const uploadAudio = createAsyncThunk(
+  'notes/uploadAudio',
+  async ({ noteId, file }, { rejectWithValue }) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await api.post(`notes/${noteId}/audio/`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return { noteId, audio: response.data };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to upload audio');
+    }
+  }
+);
+
+
 // Slice
 const notesSlice = createSlice({
   name: 'notes',
@@ -101,8 +121,17 @@ const notesSlice = createSlice({
       // Delete Note
       .addCase(deleteNote.fulfilled, (state, action) => {
         state.items = state.items.filter((note) => note.id !== action.payload);
+      })
+      // Audio Upload
+      .addCase(uploadAudio.fulfilled, (state, action) => {
+        const { noteId, audio } = action.payload;
+        const note = state.items.find((note) => note.id === noteId);
+        if (note) {
+          note.audio.push(audio);
+        }
       });
   },
+
 });
 
 export default notesSlice.reducer;
